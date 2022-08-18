@@ -6,9 +6,10 @@ const saucesCtrl = require('../controllers/sauces');
 
 router.get('/', auth, saucesCtrl.getAllSauces);
 router.post('/', auth, multer, saucesCtrl.createSauce);
+router.post('/:id/like', auth, saucesCtrl.likeSauce);
 router.get('/:id', auth, saucesCtrl.getOneSauce);
 router.put('/:id', auth, multer, saucesCtrl.modifySauce);
-router.delete('/:id', auth, saucesCtrl.deleteSauce);
+router.delete('/:id', auth, multer, saucesCtrl.deleteSauce);
 
 
 

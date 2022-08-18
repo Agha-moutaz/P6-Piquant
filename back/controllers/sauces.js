@@ -48,7 +48,7 @@ exports.modifySauce = (req, res, next) => {
         _id: req.params.id
         })
         .then((sauce) => {
-            if (sauce.useId != req.auth.userId) {
+            if (sauce.userId != req.auth.userId) {
                 res.status(401).json({
                     message: 'Non-autorisé'
                 });
@@ -68,13 +68,13 @@ exports.modifySauce = (req, res, next) => {
 
 exports.deleteSauce = (req, res, next) => {
     const sauce = new Sauce()
-    sauce.findOne({ _id: req.params.id})
-        .then(sauce => {
+    Sauce.findOne({ _id: req.params.id})
+        .then((sauce) => {
             if (sauce.userId != req.auth.userId){
                 res.status(401).json({ message: 'Non autorisé'});
             }else{
-                const filename = sauce.imageUrl.split('/images/')(1);
-                fs.unlink(`images/${filname}`,()=> {
+                const filename = sauce.imageUrl.split('/images/')[1];
+                fs.unlink(`images/${filename}`,()=> {
                     sauce.deleteOne({_id: req.params.id})
                         .then(() => {res.status(200).json({message:'sauce suprimé !'})})
                         .catch(error => res.status(401).json({ error}));
@@ -87,8 +87,9 @@ exports.deleteSauce = (req, res, next) => {
             
 
 exports.likeSauce = (req, res, next) => {
-    sauce.findOne({ _id: req.params.id})
-        .then(sauce => {
+    const sauce = new Sauce()
+    Sauce.findOne({ _id: req.params.id})
+        .then((sauce) => {
             if (!sauce.usersliked.includes(req.body.userId) && req.body.like === 1){
                 sauce.updateOne(
                     {_id :req.params.id}, 
